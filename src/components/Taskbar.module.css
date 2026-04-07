@@ -79,19 +79,38 @@
   font-weight: bold;
 }
 
-/* ── Clock ── */
-.clock {
+/* ── System Tray ── */
+.tray {
+  display: flex;
+  align-items: center;
+  gap: 4px;
   flex-shrink: 0;
   background: linear-gradient(to bottom, #b8b5af, #c8c5bf);
   border: 2px solid;
   border-color: #808080 #ffffff #ffffff #808080;
   height: 24px;
-  padding: 0 10px;
+  padding: 0 6px;
+}
+
+.trayIcon {
+  font-size: 13px;
+  cursor: default;
+  animation: warningPulse 2s ease-in-out infinite;
+}
+
+@keyframes warningPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── Clock ── */
+.clock {
+  flex-shrink: 0;
   font-size: 11px;
   font-family: 'Tahoma', Arial, sans-serif;
   display: flex;
   align-items: center;
-  min-width: 55px;
+  min-width: 44px;
   justify-content: center;
 }
 
@@ -116,17 +135,25 @@
 }
 
 .startMenuHeader {
-  background: linear-gradient(to bottom, #000080, #1084d0);
+  background: linear-gradient(to bottom, #000040, #000090);
   color: #fff;
   writing-mode: vertical-rl;
   transform: rotate(180deg);
   padding: 10px 4px;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: bold;
   font-family: 'Tahoma', Arial, sans-serif;
   letter-spacing: 3px;
   width: 30px;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.smHeaderIcon {
+  writing-mode: vertical-rl;
+  font-size: 16px;
 }
 
 .startMenuItems {

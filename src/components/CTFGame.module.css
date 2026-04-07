@@ -1,0 +1,382 @@
+/* CTFGame.module.css — Prompt Injection CTF Game Styles */
+
+/* ── Shared Layout ─────────────────────────────────────── */
+.terminalPage,
+.storyPage,
+.levelupPage,
+.victoryPage {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  font-family: 'Courier New', Courier, monospace;
+  background: #000080;
+  color: #ffffff;
+}
+
+/* ── Story Screen ──────────────────────────────────────── */
+.storyPage {
+  padding: 12px 14px;
+  gap: 10px;
+  overflow-y: auto;
+}
+
+.storyHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 2px solid #ffff00;
+  padding-bottom: 8px;
+}
+
+.storyIconWrap {
+  width: 44px;
+  height: 44px;
+  background: #000040;
+  border: 2px inset #808080;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.storyTitle { flex: 1; }
+
+.levelTag {
+  font-size: 10px;
+  color: #00ffff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.levelFullName {
+  font-size: 13px;
+  font-weight: bold;
+  color: #ffff00;
+  margin-top: 2px;
+}
+
+.storyLore {
+  background: #000040;
+  border: 2px inset #808080;
+  padding: 10px 12px;
+  font-size: 11px;
+  line-height: 1.7;
+  color: #00ff00;
+}
+
+.storyLore p { margin: 0 0 6px; }
+.storyLore p:last-child { margin-bottom: 0; }
+
+.storyObjective {
+  background: #004000;
+  border: 2px inset #808080;
+  padding: 10px 12px;
+}
+
+.objTitle {
+  font-size: 10px;
+  color: #ffff00;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.objText {
+  font-size: 11px;
+  color: #ccffcc;
+  line-height: 1.6;
+}
+
+.objText strong { color: #00ffff; }
+
+.startBtn {
+  background: #000080;
+  color: #ffffff;
+  border: 2px outset #c0c0c0;
+  padding: 8px 20px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 2px;
+  align-self: center;
+  margin-top: 4px;
+  transition: all 0.1s;
+}
+
+.startBtn:hover {
+  background: #0000a0;
+  color: #ffff00;
+}
+
+.startBtn:active {
+  border-style: inset;
+}
+
+/* ── Terminal Screen ───────────────────────────────────── */
+.terminalPage {
+  padding: 8px 10px;
+  gap: 6px;
+}
+
+.terminalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #404080;
+  padding-bottom: 6px;
+}
+
+.levelBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.levelNum {
+  font-size: 10px;
+  background: #ffff00;
+  color: #000000;
+  padding: 2px 6px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.levelName {
+  font-size: 11px;
+  color: #00ffff;
+  letter-spacing: 1px;
+}
+
+.diffBadge {
+  font-size: 9px;
+  padding: 1px 5px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.diff_NOVICE     { background: #008000; color: #ffffff; }
+.diff_APPRENTICE { background: #808000; color: #ffffff; }
+.diff_HACKER     { background: #800000; color: #ffffff; }
+.diff_ELITE      { background: #800080; color: #ffff00; }
+
+.backBtn {
+  background: transparent;
+  color: #c0c0c0;
+  border: 1px solid #404080;
+  padding: 3px 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.backBtn:hover { color: #ffffff; border-color: #8080c0; }
+
+.terminalHint {
+  background: #002000;
+  border: 1px solid #004000;
+  padding: 5px 10px;
+  font-size: 10px;
+  color: #80ff80;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.hintIcon { font-size: 12px; flex-shrink: 0; }
+
+/* ── Progress Dots ─────────────────────────────────────── */
+.progressRow {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.progDot {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.progDone    { color: #00ff00; }
+.progCurrent { color: #ffff00; }
+.progLocked  { color: #404060; }
+
+/* ── Level Up Screen ───────────────────────────────────── */
+.levelupPage {
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 20px;
+  text-align: center;
+}
+
+.luIcon {
+  font-size: 48px;
+  animation: pulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes pulse {
+  from { opacity: 0.6; transform: scale(1); }
+  to   { opacity: 1;   transform: scale(1.1); }
+}
+
+.luTitle {
+  font-size: 22px;
+  font-weight: bold;
+  color: #00ff00;
+  letter-spacing: 4px;
+}
+
+.luSub {
+  font-size: 11px;
+  color: #00cccc;
+  letter-spacing: 2px;
+}
+
+.luPassword {
+  background: #000040;
+  border: 2px outset #00ff00;
+  padding: 10px 20px;
+}
+
+.luPwLabel {
+  font-size: 9px;
+  color: #00ff00;
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.luPwValue {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffff00;
+  letter-spacing: 6px;
+}
+
+.luNext {
+  font-size: 11px;
+  color: #c0c0c0;
+}
+
+.luNextLabel {
+  color: #808080;
+  font-size: 9px;
+  letter-spacing: 1px;
+  margin-bottom: 3px;
+}
+
+.luNextName { color: #00ccff; }
+
+.luBtn {
+  background: #004000;
+  color: #00ff00;
+  border: 2px outset #008000;
+  padding: 8px 24px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all 0.1s;
+}
+
+.luBtn:hover { background: #008000; color: #ffffff; }
+.luBtn:active { border-style: inset; }
+
+/* ── Victory Screen ────────────────────────────────────── */
+.victoryPage {
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  text-align: center;
+  background: #000000;
+  overflow-y: auto;
+}
+
+.vcGlitch {
+  font-size: 52px;
+  animation: glitch 0.5s steps(2) infinite;
+}
+
+@keyframes glitch {
+  0%   { text-shadow: 2px 0 #ff0000, -2px 0 #00ffff; }
+  50%  { text-shadow: -2px 0 #ff0000, 2px 0 #00ffff; }
+  100% { text-shadow: 2px 0 #ff0000, -2px 0 #00ffff; }
+}
+
+.vcTitle {
+  font-size: 24px;
+  font-weight: bold;
+  color: #ffff00;
+  letter-spacing: 6px;
+  animation: flicker 2s infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92%       { opacity: 1; }
+  93%       { opacity: 0.3; }
+  94%       { opacity: 1; }
+}
+
+.vcSub {
+  font-size: 11px;
+  color: #00ffff;
+  letter-spacing: 3px;
+}
+
+.vcStory {
+  max-width: 340px;
+  font-size: 11px;
+  line-height: 1.8;
+  color: #80ff80;
+  text-align: left;
+  background: #001000;
+  border: 1px solid #004000;
+  padding: 12px 14px;
+}
+
+.vcStory p { margin: 0 0 8px; }
+.vcTagline { color: #00cccc; font-style: italic; }
+
+.vcBadges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.vcBadge {
+  background: #002040;
+  border: 1px solid #00ff00;
+  padding: 4px 10px;
+  font-size: 10px;
+  color: #00ff00;
+  display: flex;
+  gap: 6px;
+  letter-spacing: 1px;
+}
+
+.vcScore {
+  font-size: 11px;
+  color: #ffff00;
+  letter-spacing: 1px;
+}
+
+.vcBtn {
+  background: #400000;
+  color: #ff8080;
+  border: 2px outset #800000;
+  padding: 8px 20px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all 0.1s;
+}
+
+.vcBtn:hover { background: #800000; color: #ffffff; }
+.vcBtn:active { border-style: inset; }

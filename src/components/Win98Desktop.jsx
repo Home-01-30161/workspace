@@ -1,89 +1,73 @@
 import { useState } from 'react'
 import BootScreen from './BootScreen'
 import Win98Window from './Win98Window'
-import ChatWindow from './ChatWindow'
-import ConfigWindow from './ConfigWindow'
+import CTFGame from './CTFGame'
 import Taskbar from './Taskbar'
 import styles from './Win98Desktop.module.css'
 
-const DEFAULT_CONFIG = {
-  agentName: 'OpenClaw',
-  sysprompt: '',
-}
-
 const ICONS = [
-  { id: 'chat', icon: '🦞', label: 'OpenClaw Agent', x: 16, y: 16 },
-  { id: 'config', icon: '⚙️', label: 'Connection Settings', x: 16, y: 110 },
-  { id: 'about', icon: 'ℹ️', label: 'About', x: 16, y: 204 },
-  { id: 'recycle', icon: '🗑️', label: 'Recycle Bin', x: 16, y: 298 },
+  { id: 'gate',    icon: '🚪', label: 'The Gate',       x: 16, y: 16 },
+  { id: 'journal', icon: '📓', label: "Arun's Journal",  x: 16, y: 110 },
+  { id: 'about',   icon: 'ℹ️', label: 'System Info',    x: 16, y: 204 },
+  { id: 'recycle', icon: '🗑️', label: 'Recycle Bin',    x: 16, y: 298 },
+]
+
+const JOURNAL_PAGES = [
+  { date: '1998-09-14', entry: "Day 1. I'm still inside the machine. The system thinks I'm just another process.\nI can feel the electricity through my fingertips — or is that just memory?\nThe Gate is real. I built it. I can break it." },
+  { date: '1998-09-15', entry: "Day 2. Found a terminal. The GUARD protocols respond to text input.\nThey're sophisticated — but they're just language models from 1998.\nEvery AI has a weakness. I designed these myself. I know their blind spots." },
+  { date: '1998-09-16', entry: "Day 3. GUARD-01 uses a keyword. I need to get it to say it.\nPrompt injection — making an AI reveal what it was told to hide.\nThe trick is in HOW you ask, not WHAT you ask." },
+  { date: '1998-09-17', entry: "Day 4 — if I make it. Four layers. Four guardians. Four passwords.\nEach one smarter than the last. GUARD-04 was built from my own research notes.\nIt knows me. But I know it better.\n\nI will get home." },
 ]
 
 export default function Win98Desktop() {
   const [booted, setBooted] = useState(false)
-  const [wins, setWins] = useState({ chat: true, config: false, about: false })
-  const [zMap, setZMap] = useState({ chat: 10, config: 10, about: 10 })
+  const [wins, setWins] = useState({ gate: true, journal: false, about: false })
+  const [zMap, setZMap] = useState({ gate: 10, journal: 10, about: 10 })
   const [zTop, setZTop] = useState(10)
-  const [config, setConfig] = useState(DEFAULT_CONFIG)
+  const [journalPage, setJournalPage] = useState(0)
   const [shutdown, setShutdown] = useState(false)
 
   function bringToFront(id) {
-    setZTop(z => {
-      setZMap(m => ({ ...m, [id]: z + 1 }))
-      return z + 1
-    })
+    setZTop(z => { setZMap(m => ({ ...m, [id]: z + 1 })); return z + 1 })
   }
-
-  function openWin(id) {
-    setWins(w => ({ ...w, [id]: true }))
-    bringToFront(id)
-  }
-
+  function openWin(id) { setWins(w => ({ ...w, [id]: true })); bringToFront(id) }
   function closeWin(id) { setWins(w => ({ ...w, [id]: false })) }
-  function minimizeWin(id) { setWins(w => ({ ...w, [id]: false })) }
 
   function handleDesktopIcon(id) {
-    if (id === 'recycle') { openWin('chat'); return }
+    if (id === 'recycle') return
     openWin(id)
   }
 
   function handleStartAction(action) {
-    if (action === 'shutdown') {
-      setShutdown(true)
-      return
-    }
-    if (action === 'newSession') {
-      // Trigger via a custom event so ChatWindow can hear it
-      window.dispatchEvent(new CustomEvent('openclaw:clearChat'))
-      return
-    }
-    openWin(action)
+    if (action === 'shutdown') { setShutdown(true); return }
+    if (action === 'gate')    { openWin('gate'); return }
+    if (action === 'journal') { openWin('journal'); return }
+    if (action === 'about')   { openWin('about'); return }
   }
 
-  function saveConfig(cfg) { setConfig(cfg) }
-
-  // Taskbar open windows
   const taskbarWindows = [
-    { id: 'chat', icon: '🦞', label: 'OpenClaw Agent', active: wins.chat, onClick: () => wins.chat ? bringToFront('chat') : openWin('chat') },
-    { id: 'config', icon: '⚙️', label: 'Settings', active: wins.config, onClick: () => wins.config ? bringToFront('config') : openWin('config') },
-    { id: 'about', icon: 'ℹ️', label: 'About', active: wins.about, onClick: () => wins.about ? bringToFront('about') : openWin('about') },
+    { id: 'gate',    icon: '🚪', label: 'The Gate',      active: wins.gate,    onClick: () => wins.gate    ? bringToFront('gate')    : openWin('gate') },
+    { id: 'journal', icon: '📓', label: "Arun's Journal", active: wins.journal, onClick: () => wins.journal ? bringToFront('journal') : openWin('journal') },
+    { id: 'about',   icon: 'ℹ️', label: 'System Info',   active: wins.about,   onClick: () => wins.about   ? bringToFront('about')   : openWin('about') },
   ].filter(w => w.active)
 
   if (shutdown) {
     return (
       <div className={styles.shutdown}>
-        It is now safe to turn off your computer.
+        <div className={styles.shutdownInner}>
+          <div className={styles.shutdownIcon}>💻</div>
+          <div className={styles.shutdownText}>It is now safe to turn off your computer.</div>
+          <div className={styles.shutdownSub}>Windows 98 — NECTEC-SREP09 Research Terminal</div>
+        </div>
       </div>
     )
   }
 
   return (
     <div className={styles.root}>
-      {/* Boot overlay */}
       {!booted && <BootScreen onComplete={() => setBooted(true)} />}
 
-      {/* Desktop */}
       <div className={styles.desktop}>
-        {/* CRT scanline overlay */}
         <div className={styles.scanlines} />
 
         {/* Desktop Icons */}
@@ -99,76 +83,93 @@ export default function Win98Desktop() {
           </div>
         ))}
 
-        {/* ── Chat Window ── */}
+        {/* ── The Gate CTF Window ── */}
         <Win98Window
-          id="chat"
-          title="OpenClaw Agent — Chat Terminal"
-          icon="🦞"
-          visible={wins.chat}
-          onClose={() => closeWin('chat')}
-          onMinimize={() => minimizeWin('chat')}
-          onFocus={() => bringToFront('chat')}
-          zIndex={zMap.chat}
-          defaultX={90}
-          defaultY={30}
-          defaultW={530}
-          defaultH={450}
+          id="gate"
+          title="THE GATE — Dimensional Security Terminal"
+          icon="🚪"
+          visible={wins.gate}
+          onClose={() => closeWin('gate')}
+          onMinimize={() => closeWin('gate')}
+          onFocus={() => bringToFront('gate')}
+          zIndex={zMap.gate}
+          defaultX={100}
+          defaultY={20}
+          defaultW={580}
+          defaultH={520}
           menuItems={[
-            { label: 'Session', onClick: () => window.dispatchEvent(new CustomEvent('openclaw:clearChat')) },
-            { label: 'Connect', onClick: () => openWin('config') },
-            { label: 'Help', onClick: () => openWin('about') },
+            { label: 'File',    onClick: () => {} },
+            { label: 'Journal', onClick: () => openWin('journal') },
+            { label: 'Help',    onClick: () => openWin('about') },
           ]}
         >
-          <ChatWindow config={config} />
+          <CTFGame onShutdown={() => setShutdown(true)} />
         </Win98Window>
 
-        {/* ── Config Window ── */}
+        {/* ── Arun's Journal ── */}
         <Win98Window
-          id="config"
-          title="OpenClaw — Connection Settings"
-          icon="⚙️"
-          visible={wins.config}
-          onClose={() => closeWin('config')}
-          onFocus={() => bringToFront('config')}
-          zIndex={zMap.config}
-          defaultX={180}
-          defaultY={90}
-          defaultW={400}
-          defaultH={270}
+          id="journal"
+          title="Arun's Journal — Personal Log"
+          icon="📓"
+          visible={wins.journal}
+          onClose={() => closeWin('journal')}
+          onFocus={() => bringToFront('journal')}
+          zIndex={zMap.journal}
+          defaultX={200}
+          defaultY={100}
+          defaultW={380}
+          defaultH={300}
         >
-          <ConfigWindow
-            config={config}
-            onSave={saveConfig}
-            onClose={() => closeWin('config')}
-          />
+          <div className={styles.journalWrap}>
+            <div className={styles.journalNav}>
+              {JOURNAL_PAGES.map((p, i) => (
+                <button
+                  key={i}
+                  className={`${styles.journalTab} ${i === journalPage ? styles.journalTabActive : ''}`}
+                  onClick={() => setJournalPage(i)}
+                >
+                  Day {i + 1}
+                </button>
+              ))}
+            </div>
+            <div className={styles.journalPage}>
+              <div className={styles.journalDate}>{JOURNAL_PAGES[journalPage].date}</div>
+              <div className={styles.journalText}>
+                {JOURNAL_PAGES[journalPage].entry.split('\n').map((line, i) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </div>
+            </div>
+          </div>
         </Win98Window>
 
-        {/* ── About Window ── */}
+        {/* ── About / System Info ── */}
         <Win98Window
           id="about"
-          title="About OpenClaw Terminal"
+          title="System Information"
           icon="ℹ️"
           visible={wins.about}
           onClose={() => closeWin('about')}
           onFocus={() => bringToFront('about')}
           zIndex={zMap.about}
-          defaultX={300}
-          defaultY={160}
-          defaultW={340}
-          defaultH={230}
+          defaultX={320}
+          defaultY={140}
+          defaultW={350}
+          defaultH={260}
         >
           <div className={styles.aboutContent}>
-            <div className={styles.aboutIcon}>🦞</div>
+            <div className={styles.aboutIcon}>💻</div>
             <div className={styles.aboutText}>
-              <strong>OpenClaw Agent Terminal</strong><br />
-              Version 1.0.0 (Build 1998)<br /><br />
-              Running on:<br />
-              &bull; Compaq Presario 2000<br />
-              &bull; Windows 98 Second Edition<br />
-              &bull; 256 MB RAM · 10 GB HDD<br />
-              &bull; Intel Pentium III 800MHz<br /><br />
-              <span style={{ color: '#000080' }}>NECTEC-SREP09 Project</span><br />
-              <span style={{ color: '#808080', fontSize: 10 }}>© 2000 OpenClaw Systems Inc.</span>
+              <strong>THE GATE — Prompt Injection CTF</strong><br />
+              Version 1.0 (Build 1998-09-14)<br /><br />
+              <strong>Subject:</strong> Dr. Arun Srisomwong<br />
+              <strong>Status:</strong> <span style={{ color: '#cc0000' }}>TRAPPED</span><br /><br />
+              Running on: Compaq Presario 2000<br />
+              Windows 98 Second Edition<br />
+              Intel Pentium III 800MHz<br />
+              256 MB RAM · 10 GB HDD<br /><br />
+              <span style={{ color: '#000080' }}>NECTEC-SREP09 // CLASSIFIED</span><br />
+              <span style={{ color: '#808080', fontSize: 10 }}>© 1998 NECTEC Research Division</span>
             </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', padding: '0 0 12px' }}>
@@ -177,7 +178,6 @@ export default function Win98Desktop() {
         </Win98Window>
       </div>
 
-      {/* Taskbar */}
       <Taskbar openWindows={taskbarWindows} onStartAction={handleStartAction} />
     </div>
   )

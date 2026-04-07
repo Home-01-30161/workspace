@@ -1,144 +1,169 @@
+/* BootScreen.module.css */
+
 .boot {
   position: fixed;
   inset: 0;
-  background: #000;
+  background: #000000;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  color: #fff;
-  font-family: 'VT323', monospace;
+  overflow: hidden;
+  font-family: 'Courier New', Courier, monospace;
   transition: opacity 0.9s ease;
 }
 
-.fadeOut {
-  opacity: 0;
+.fadeOut { opacity: 0; pointer-events: none; }
+
+/* CRT effects */
+.crt {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.6) 100%);
   pointer-events: none;
+  z-index: 2;
 }
 
-/* CRT phosphor scanlines overlay */
-.crt {
-  position: fixed;
+.scanline {
+  position: absolute;
   inset: 0;
-  pointer-events: none;
   background: repeating-linear-gradient(
     0deg,
     transparent,
     transparent 1px,
-    rgba(0, 255, 0, 0.015) 1px,
-    rgba(0, 255, 0, 0.015) 2px
+    rgba(0,255,0,0.015) 1px,
+    rgba(0,255,0,0.015) 2px
   );
-  z-index: 1;
-  animation: flicker 0.12s infinite;
+  pointer-events: none;
+  z-index: 3;
 }
 
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.97; }
-}
-
-.logo {
-  font-size: 56px;
-  color: #00ffff;
-  text-shadow:
-    0 0 10px #00ffff,
-    0 0 30px #00aaff,
-    0 0 60px #0044ff;
-  letter-spacing: 6px;
-  margin-bottom: 16px;
-  animation: glow 2s ease-in-out infinite alternate;
+/* ── BIOS Phase ──────────────────────────────────────────── */
+.biosPhase {
   position: relative;
-  z-index: 2;
-}
-
-@keyframes glow {
-  from { text-shadow: 0 0 10px #00ffff, 0 0 30px #00aaff; }
-  to   { text-shadow: 0 0 20px #00ffff, 0 0 50px #00aaff, 0 0 80px #0044ff; }
-}
-
-.subtitle {
-  font-size: 20px;
-  color: #aaa;
-  margin-bottom: 32px;
-  text-align: center;
+  z-index: 4;
+  padding: 30px 40px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  position: relative;
-  z-index: 2;
+  gap: 6px;
+  font-size: 13px;
+  color: #c0c0c0;
+  flex: 1;
 }
 
-.sub2 {
-  font-size: 14px;
-  color: #555;
-  font-family: 'Share Tech Mono', monospace;
+.biosLogo {
+  font-size: 28px;
+  font-weight: bold;
+  color: #ffffff;
+  letter-spacing: 8px;
+  margin-bottom: 4px;
 }
 
-.barWrap {
-  width: 320px;
-  height: 22px;
-  border: 2px solid #333;
-  background: #000;
-  position: relative;
-  overflow: hidden;
-  z-index: 2;
+.logoMark { color: #ffff00; }
+
+.biosModel {
+  font-size: 12px;
+  color: #808080;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
 }
 
-.bar {
-  height: 100%;
-  background: linear-gradient(to right, #000080, #1464c8, #0000ff);
-  transition: width 0.15s linear;
-  position: relative;
+.biosSep {
+  color: #404040;
+  font-size: 11px;
+  margin: 2px 0;
 }
 
-/* Moving shimmer on bar */
-.bar::after {
-  content: '';
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 60px;
-  background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
-  animation: shimmer 1s linear infinite;
-  right: 0;
+.biosLines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
-@keyframes shimmer {
-  from { transform: translateX(-60px); }
-  to   { transform: translateX(60px); }
+.biosLine {
+  font-size: 12px;
+  color: #c0c0c0;
+  line-height: 1.5;
 }
 
-.barLabel {
-  position: absolute;
-  inset: 0;
+.biosWarn {
+  color: #ffff00;
+  font-weight: bold;
+}
+
+.biosProgress {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  color: #fff;
-  font-family: 'Share Tech Mono', monospace;
-  mix-blend-mode: difference;
+  gap: 10px;
+  margin-top: 16px;
 }
 
-.status {
-  margin-top: 12px;
-  font-size: 15px;
-  color: #666;
-  height: 20px;
-  font-family: 'Share Tech Mono', monospace;
+.biosBar {
+  flex: 1;
+  height: 12px;
+  background: #1a1a1a;
+  border: 1px solid #333333;
+}
+
+.biosBarFill {
+  height: 100%;
+  background: #00aa00;
+  transition: width 0.3s ease;
+}
+
+.biosBarLabel {
+  font-size: 11px;
+  color: #808080;
+  width: 36px;
+  text-align: right;
+}
+
+/* ── Story Phase ─────────────────────────────────────────── */
+.storyPhase {
   position: relative;
-  z-index: 2;
+  z-index: 4;
+  padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
 }
 
-.bios {
-  position: fixed;
-  top: 16px;
-  left: 16px;
-  font-family: 'Share Tech Mono', monospace;
+.storyTitle {
   font-size: 12px;
-  color: #333;
+  color: #00ff00;
+  line-height: 1.4;
+  letter-spacing: 1px;
+  font-weight: bold;
+}
+
+.storyLines {
   display: flex;
   flex-direction: column;
   gap: 2px;
-  z-index: 2;
+}
+
+.storyLine {
+  font-size: 13px;
+  color: #00cc00;
+  line-height: 1.7;
+}
+
+.storyHighlight {
+  color: #ffff00;
+  font-weight: bold;
+}
+
+.storyBlank { height: 8px; }
+
+/* Blinking cursor */
+.cursor {
+  color: #00ff00;
+  animation: blink 0.8s step-end infinite;
+  font-size: 14px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
 }

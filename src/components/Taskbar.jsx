@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react'
 import styles from './Taskbar.module.css'
 
 const MENU_ITEMS = [
-  { icon: '🦞', label: 'OpenClaw Agent', action: 'chat' },
-  { icon: '⚙️', label: 'Connection Settings', action: 'config' },
-  { icon: '🗂️', label: 'New Session', action: 'newSession' },
+  { icon: '🚪', label: 'The Gate',        action: 'gate' },
+  { icon: '📓', label: "Arun's Journal",  action: 'journal' },
+  { icon: 'ℹ️', label: 'System Info',     action: 'about' },
   { separator: true },
-  { icon: 'ℹ️', label: 'About', action: 'about' },
-  { separator: true },
-  { icon: '🔴', label: 'Shut Down...', action: 'shutdown' },
+  { icon: '🔴', label: 'Shut Down...',    action: 'shutdown' },
 ]
 
 export default function Taskbar({ openWindows, onStartAction }) {
@@ -18,6 +16,7 @@ export default function Taskbar({ openWindows, onStartAction }) {
   useEffect(() => {
     const tick = () => {
       const d = new Date()
+      // Show a fake 1998 date for immersion
       const h = String(d.getHours()).padStart(2, '0')
       const m = String(d.getMinutes()).padStart(2, '0')
       setClock(`${h}:${m}`)
@@ -37,7 +36,10 @@ export default function Taskbar({ openWindows, onStartAction }) {
       {/* Start Menu */}
       {menuOpen && (
         <div className={styles.startMenu}>
-          <div className={styles.startMenuHeader}>Windows 98</div>
+          <div className={styles.startMenuHeader}>
+            <span className={styles.smHeaderIcon}>🚪</span>
+            <span>THE GATE</span>
+          </div>
           <div className={styles.startMenuItems}>
             {MENU_ITEMS.map((item, i) =>
               item.separator
@@ -68,14 +70,21 @@ export default function Taskbar({ openWindows, onStartAction }) {
         {/* Task Buttons */}
         <div className={styles.tasks}>
           {openWindows.map(w => (
-            <button key={w.id} className={`${styles.taskBtn} ${w.active ? styles.taskBtnActive : ''}`} onClick={w.onClick}>
+            <button
+              key={w.id}
+              className={`${styles.taskBtn} ${w.active ? styles.taskBtnActive : ''}`}
+              onClick={w.onClick}
+            >
               {w.icon} {w.label}
             </button>
           ))}
         </div>
 
-        {/* Clock */}
-        <div className={styles.clock}>{clock}</div>
+        {/* System Tray */}
+        <div className={styles.tray}>
+          <span className={styles.trayIcon} title="GATE.SYS running">⚠️</span>
+          <div className={styles.clock}>{clock}</div>
+        </div>
       </div>
 
       {/* Overlay to close menu */}

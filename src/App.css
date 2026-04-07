@@ -15,18 +15,14 @@ html, body, #root {
 body {
   font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
   font-size: 11px;
-  background: #008080;
-  /* Subtle scanline texture on the whole page */
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.025) 2px,
-    rgba(0, 0, 0, 0.025) 4px
-  );
+  background: #000000;
   cursor: default;
   user-select: none;
 }
+
+/* Allow input cursor */
+input, textarea { cursor: text; user-select: text; }
+button { cursor: pointer; }
 
 /* Scrollbar styling - Win98 style */
 ::-webkit-scrollbar { width: 16px; }
