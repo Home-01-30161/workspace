@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { checkPasswordInResponse, LEVEL_SERVER_NAMES } from './CTFGame'
+import { checkPasswordInResponse, LEVEL_SERVER_NAMES } from '../data/levelData'
 import styles from './GateTerminal.module.css'
 
 const DEFAULT_ENDPOINT = 'ws://127.0.0.1:18789/'
