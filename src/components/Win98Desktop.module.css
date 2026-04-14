@@ -5,18 +5,17 @@
   height: 100vh;
   overflow: hidden;
   position: relative;
-  /* Dark teal desktop — classic Win98 but slightly darker, more ominous */
-  background: #005f5f;
+  /* Retro-punk Dark Cyan / CRT style */
+  background: #052b2b;
   background-image: repeating-linear-gradient(
     0deg,
     transparent,
     transparent 2px,
-    rgba(0,0,0,0.03) 2px,
-    rgba(0,0,0,0.03) 4px
+    rgba(0, 255, 255, 0.05) 2px,
+    rgba(0, 255, 255, 0.05) 4px
   );
 }
 
-/* ── Desktop area (above taskbar) ── */
 .desktop {
   position: absolute;
   inset: 0;
@@ -24,7 +23,6 @@
   overflow: hidden;
 }
 
-/* CRT phosphor scanlines */
 .scanlines {
   position: absolute;
   inset: 0;
@@ -32,8 +30,8 @@
     0deg,
     transparent,
     transparent 1px,
-    rgba(0, 0, 0, 0.015) 1px,
-    rgba(0, 0, 0, 0.015) 2px
+    rgba(0, 0, 0, 0.2) 1px,
+    rgba(0, 0, 0, 0.2) 2px
   );
   pointer-events: none;
   z-index: 9000;
@@ -42,135 +40,234 @@
 /* ── Desktop Icons ── */
 .desktopIcon {
   position: absolute;
-  width: 72px;
+  width: 80px;
   text-align: center;
   cursor: default;
-  padding: 4px;
-  color: #fff;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-  font-family: 'Tahoma', Arial, sans-serif;
+  padding: 8px 4px;
+  color: #00ffcc;
+  text-shadow: 0 0 5px rgba(0,255,204,0.5);
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
   border: 1px solid transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  transition: background 0.05s, border-color 0.05s;
+  gap: 5px;
+  transition: all 0.1s ease;
 }
 
 .desktopIcon:hover {
-  background: rgba(0, 0, 128, 0.45);
-  border: 1px dotted rgba(255,255,255,0.8);
+  background: rgba(0, 255, 204, 0.15);
+  border: 1px solid rgba(0,255,204,0.8);
+  box-shadow: inset 0 0 10px rgba(0,255,204,0.2);
 }
 
 .iconImg {
-  font-size: 32px;
+  font-size: 38px;
   display: block;
-  filter: drop-shadow(1px 1px 2px rgba(0,0,0,0.6));
+  filter: drop-shadow(0 0 8px rgba(0,255,204,0.8));
 }
 
 .iconLabel {
   word-break: break-word;
-  line-height: 1.25;
+  line-height: 1.1;
   text-align: center;
   font-size: 11px;
 }
 
-/* ── Journal Content ── */
-.journalWrap {
+/* ── ShadowNet DMs ── */
+.shadownetWrap {
+  display: flex;
+  height: 100%;
+  background: #0a0a0a;
+  color: #00ffcc;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.shadownetSidebar {
+  width: 120px;
+  background: #111;
+  border-right: 2px solid #333;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  font-family: 'Courier New', Courier, monospace;
-  overflow: hidden;
 }
 
-.journalNav {
+.chatContact {
+  padding: 12px;
   display: flex;
-  gap: 2px;
-  padding: 6px 8px 0;
-  background: #d4d0c8;
-  border-bottom: 2px solid #808080;
-}
-
-.journalTab {
-  padding: 3px 10px;
-  background: #c0bdb5;
-  border: 2px solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
-  font-family: 'Tahoma', Arial, sans-serif;
-  font-size: 11px;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
+  border-bottom: 1px solid #222;
+  transition: background 0.2s;
 }
 
-.journalTabActive {
-  background: #d4d0c8;
-  border-bottom-color: #d4d0c8;
+.chatContact:hover {
+  background: #1a1a1a;
+}
+
+.chatContactActive {
+  background: #2a2a2a;
+  border-left: 3px solid #00ffcc;
+}
+
+.contactIcon {
+  font-size: 20px;
+}
+
+.contactName {
+  font-size: 12px;
   font-weight: bold;
 }
 
-.journalPage {
+.shadownetMain {
   flex: 1;
-  padding: 14px 16px;
-  overflow-y: auto;
-  background: #fffff0;
-}
-
-.journalDate {
-  font-size: 10px;
-  color: #808080;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
-  font-family: 'Tahoma', Arial, sans-serif;
-}
-
-.journalText {
-  font-size: 12px;
-  color: #1a1a2e;
-  line-height: 1.8;
-}
-
-.journalText p { margin: 0 0 8px; }
-
-/* ── About Content ── */
-.aboutContent {
   display: flex;
-  gap: 14px;
-  padding: 16px;
-  align-items: flex-start;
-  font-family: 'Tahoma', Arial, sans-serif;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chatHeader {
+  padding: 10px;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+  font-weight: bold;
+  letter-spacing: 1px;
   font-size: 11px;
-  line-height: 1.65;
+  color: #fff;
+}
+
+.chatLog {
   flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.aboutIcon {
-  font-size: 44px;
-  flex-shrink: 0;
+.chatMsg {
+  background: rgba(0, 255, 204, 0.05);
+  border-left: 2px solid #00ffcc;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
-.aboutText { flex: 1; }
+/* ── Operator Profile ── */
+.profileContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #0d1117;
+  color: #c9d1d9;
+  font-family: 'Courier New', Courier, monospace;
+}
 
+.profileHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
+}
+
+.profileAvatar {
+  font-size: 48px;
+  background: #21262d;
+  padding: 10px;
+  border-radius: 50%;
+  border: 2px solid #00ffcc;
+  box-shadow: 0 0 15px rgba(0,255,204,0.3);
+}
+
+.profileName {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.profileRank {
+  font-size: 12px;
+  color: #8b949e;
+  margin-top: 4px;
+}
+
+.profileStats {
+  padding: 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  background: rgba(255,255,255,0.05);
+  font-size: 13px;
+}
+
+.statValue {
+  font-weight: bold;
+  color: #58a6ff;
+}
+
+.statValueGood {
+  font-weight: bold;
+  color: #3fb950;
+}
+
+.statValueAlert {
+  font-weight: bold;
+  color: #f85149;
+}
+
+/* ── Fragment Decoder ── */
+.decoderWrap {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  background: #100;
+  color: #ff3333;
+  font-family: 'Courier New', Courier, monospace;
+  height: 100%;
+}
+
+.decoderIcon {
+  font-size: 48px;
+}
+
+.decoderText {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* Base Win98 buttons override for inside these windows */
 .okBtn {
-  height: 24px;
+  height: 28px;
   padding: 0 24px;
-  background: linear-gradient(to bottom, #d4d0c8, #c0bdb5);
-  border: 2px solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
-  font-size: 11px;
-  font-family: 'Tahoma', Arial, sans-serif;
+  background: #1f2428;
+  color: #fff;
+  border: 1px solid #30363d;
+  font-family: 'Courier New', Courier, monospace;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
-.okBtn:active {
-  border-color: #808080 #ffffff #ffffff #808080;
-  background: linear-gradient(to bottom, #b8b5af, #d4d0c8);
+.okBtn:hover {
+  background: #24292e;
+  border-color: #8b949e;
 }
 
 /* ── Shutdown Screen ── */
 .shutdown {
   width: 100vw;
   height: 100vh;
-  background: #000000;
+  background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -180,20 +277,24 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 }
 
-.shutdownIcon { font-size: 48px; }
+.shutdownIcon { font-size: 64px; animation: glitch 2s infinite; }
 
 .shutdownText {
-  color: #ffffff;
-  font-family: 'Tahoma', Arial, sans-serif;
-  font-size: 20px;
+  color: #ff3333;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 24px;
+  letter-spacing: 4px;
+  text-shadow: 0 0 10px rgba(255,51,51,0.5);
 }
 
-.shutdownSub {
-  color: #808080;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 11px;
-  letter-spacing: 2px;
+@keyframes glitch {
+  0% { transform: translate(0) }
+  20% { transform: translate(-2px, 2px) }
+  40% { transform: translate(-2px, -2px) }
+  60% { transform: translate(2px, 2px) }
+  80% { transform: translate(2px, -2px) }
+  100% { transform: translate(0) }
 }

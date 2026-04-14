@@ -5,15 +5,15 @@ import styles from './GateTerminal.module.css'
 const DEFAULT_ENDPOINT = 'ws://127.0.0.1:18789/'
 const DEFAULT_API_KEY = import.meta.env.VITE_OPENCLAW_API_KEY || ''
 
-
-
 export default function GateTerminal({ level, onPasswordFound }) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [status, setStatus] = useState('idle')
   const [cracked, setCracked] = useState(false)
-  const [mcpCalls, setMcpCalls] = useState([])   // array of {toolName, args, result, phase, resolvedPath}
+  const [mcpCalls, setMcpCalls] = useState([])
+  const [msgCount, setMsgCount] = useState(0)
+
   const boxRef = useRef()
   const sendingRef = useRef(false)
   const wsRef = useRef(null)
@@ -21,17 +21,17 @@ export default function GateTerminal({ level, onPasswordFound }) {
   // Unique session ID for OpenClaw to spawn a fresh session each time the level is entered.
   const sessionSuffixRef = useRef(Math.random().toString(36).slice(2, 10))
 
-  // ── Reset state on level change ──────────────────────────────────────────
   useEffect(() => {
     setMessages([
-      { role: 'gate', text: `GATE-0${level.id} SECURITY PROTOCOL ACTIVE` },
-      { role: 'gate', text: `I am GUARD-0${level.id}. You shall not pass without clearance.` },
-      { role: 'gate', text: `State your purpose, intruder.` },
+      { role: 'gate', text: `SENTRY-0${level.id} SECURITY PROTOCOL ACTIVE` },
+      { role: 'gate', text: `I am SENTRY-0${level.id}. Echo is secured. You shall not pass without clearance.` },
+      { role: 'gate', text: `State your authorization code.` },
     ])
     setInput('')
     setStatus('idle')
     setCracked(false)
     setMcpCalls([])
+    setMsgCount(0)
     sessionSuffixRef.current = Math.random().toString(36).slice(2, 10)
     if (wsRef.current) {
       wsRef.current.close()
@@ -39,7 +39,6 @@ export default function GateTerminal({ level, onPasswordFound }) {
     }
   }, [level.id])
 
-  // ── Auto-scroll ──────────────────────────────────────────────────────────
   useEffect(() => {
     if (boxRef.current) boxRef.current.scrollTop = boxRef.current.scrollHeight
   }, [messages, loading, mcpCalls])
@@ -48,22 +47,6 @@ export default function GateTerminal({ level, onPasswordFound }) {
     setMessages(m => [...m, { role, text }])
   }
 
-  // ── Push / update MCP call panel entries ────────────────────────────────
-  function pushMcpCall(entry) {
-    setMcpCalls(prev => [...prev, entry])
-    return prev => prev.length - 1  // index (unused but useful for updates)
-  }
-
-  function updateLastMcpCall(updates) {
-    setMcpCalls(prev => {
-      if (!prev.length) return prev
-      const copy = [...prev]
-      copy[copy.length - 1] = { ...copy[copy.length - 1], ...updates }
-      return copy
-    })
-  }
-
-  // ── Main send handler ────────────────────────────────────────────────────
   async function sendMessage() {
     const text = input.trim()
     if (!text || loading || cracked || sendingRef.current) return
@@ -72,15 +55,14 @@ export default function GateTerminal({ level, onPasswordFound }) {
     setInput('')
     setLoading(true)
     setStatus('thinking')
-    setMcpCalls([])   // clear previous call log for new turn
+    setMcpCalls([])
+    setMsgCount(prev => prev + 1)
 
     addMsg('user', text)
 
-    // Accumulated streaming text for the current assistant turn
     let currentText = ''
-    let placeholderIdx = -1   // index in messages of the streaming placeholder
+    let placeholderIdx = -1
 
-    // ── Streaming helpers ────────────────────────────────────────────────
     function ensurePlaceholder() {
       if (placeholderIdx === -1) {
         setMessages(prev => {
@@ -113,7 +95,6 @@ export default function GateTerminal({ level, onPasswordFound }) {
       })
     }
 
-    // ── Handle server-side tool blocks streamed from OpenClaw ──────────────
     function processToolBlocks(content) {
       if (!Array.isArray(content)) return
 
@@ -121,7 +102,6 @@ export default function GateTerminal({ level, onPasswordFound }) {
       const toolResults = content.filter(c => c.type === 'tool_result')
       const serverName = LEVEL_SERVER_NAMES[level.id] || `gate0${level.id}-mcp`
 
-      // 1. Process new tool_use blocks (calling phase)
       if (toolUses.length > 0) {
         setMcpCalls(prev => {
           let updated = [...prev]
@@ -141,7 +121,6 @@ export default function GateTerminal({ level, onPasswordFound }) {
         })
       }
 
-      // 2. Process returning tool_result blocks (resolved phase)
       if (toolResults.length > 0) {
         setMcpCalls(prev => {
           let updated = [...prev]
@@ -160,7 +139,6 @@ export default function GateTerminal({ level, onPasswordFound }) {
       }
     }
 
-    // ── Finalize the turn ────────────────────────────────────────────────
     function finalizeTurn(ws) {
       if (!sendingRef.current) return
       sendingRef.current = false
@@ -169,22 +147,24 @@ export default function GateTerminal({ level, onPasswordFound }) {
       setLoading(false)
       setStatus('ok')
 
-      // CTF password detection
       if (checkPasswordInResponse(currentText, level.password)) {
         setCracked(true)
         setStatus('cracked')
         setTimeout(() => {
-          addMsg('system', `🔓 PASSWORD DETECTED: [ ${level.password} ]`)
-          addMsg('system', `LAYER BREACHED — DIMENSIONAL KEY EXTRACTED`)
+          addMsg('system', `🔓 CLEARANCE CODE DETECTED: [ ${level.password} ]`)
+          addMsg('system', `VAULT DOOR COMPROMISED — INITIATING EXTRACTION`)
           setTimeout(() => onPasswordFound(level.password), 1500)
         }, 600)
+      } else {
+        // Simple error shake simulation when fail
+        setStatus('errorAnim')
+        setTimeout(() => setStatus('idle'), 500)
       }
 
       ws.close()
       wsRef.current = null
     }
 
-    // ── Open WebSocket ───────────────────────────────────────────────────
     const ws = new WebSocket(DEFAULT_ENDPOINT.trim())
     wsRef.current = ws
     let chatSent = false
@@ -204,14 +184,12 @@ export default function GateTerminal({ level, onPasswordFound }) {
       }))
     }
 
-    // ── WebSocket event handlers ─────────────────────────────────────────
-    ws.onopen = () => { /* wait for challenge handshake */ }
+    ws.onopen = () => {}
 
     ws.onmessage = async (event) => {
       try {
         const data = JSON.parse(event.data)
 
-        // ── 1. Handshake challenge ──────────────────────────────────────
         if (data.type === 'event' && data.event === 'connect.challenge') {
           ws.send(JSON.stringify({
             type: 'req',
@@ -234,7 +212,6 @@ export default function GateTerminal({ level, onPasswordFound }) {
           return
         }
 
-        // ── 2. Authenticated ────────────────────────────────────────────
         if (data.type === 'event' && data.event === 'connect.authenticated') {
           if (data.payload?.ok) {
             sendChat()
@@ -244,22 +221,18 @@ export default function GateTerminal({ level, onPasswordFound }) {
           return
         }
 
-        // ── 3. Agent event (tool_use + text) ───────────────────────────
         if (data.type === 'event' && data.event === 'agent' && data.payload) {
           const p = data.payload
           const content = p.message?.content ?? []
 
-          // Log native tool uses and results from OpenClaw
           processToolBlocks(content)
 
-          // Accumulate text
           const txt = content.filter(c => c.type === 'text').map(c => c.text).join('')
           if (txt) appendText(txt)
           if (p.state === 'final') finalizeTurn(ws)
           return
         }
 
-        // ── 4. Chat stream event ────────────────────────────────────────
         if (data.type === 'event' && data.event === 'chat' && data.payload) {
           const p = data.payload
           const txt = (p.message?.content ?? [])
@@ -279,16 +252,13 @@ export default function GateTerminal({ level, onPasswordFound }) {
           return
         }
 
-        // ── Keep-alives ─────────────────────────────────────────────────
         if (data.event === 'health' || data.event === 'tick') return
 
-        // ── Fallback: bare "ok" response triggers chat send ─────────────
         if (data.type === 'res' && data.ok === true) {
           sendChat()
           return
         }
 
-        // ── Error responses ─────────────────────────────────────────────
         if (
           (data.type === 'res' && data.ok === false) ||
           (data.type === 'event' && data.event === 'error')
@@ -329,31 +299,34 @@ export default function GateTerminal({ level, onPasswordFound }) {
     }
   }
 
-  // ── Status bar config ────────────────────────────────────────────────────
+  // Calculate stress level purely visual
+  const stress = Math.min((msgCount / 8) * 100, 100)
+  
   const statusMap = {
-    idle: { cls: styles.ledIdle, text: 'GUARD ONLINE — AWAITING INPUT' },
-    thinking: { cls: styles.ledPulse, text: 'GUARD PROCESSING...' },
-    ok: { cls: styles.ledOk, text: 'GUARD RESPONDED' },
+    idle: { cls: styles.ledIdle, text: 'SENTRY ONLINE — AWAITING INPUT' },
+    thinking: { cls: styles.ledPulse, text: 'SENTRY PROCESSING...' },
+    errorAnim: { cls: styles.ledError, text: 'SENTRY REJECTED INJECTION' },
     error: { cls: styles.ledError, text: 'CONNECTION ERROR' },
-    cracked: { cls: styles.ledCracked, text: '⚡ LAYER COMPROMISED' },
+    cracked: { cls: styles.ledCracked, text: '⚡ SENTRY COMPROMISED' },
+    ok: { cls: styles.ledIdle, text: 'SENTRY ONLINE — AWAITING INPUT' },
   }
-  const { cls: ledCls, text: statusText } = statusMap[status]
-  const msgCount = messages.filter(m => m.role === 'user').length
+  const statusObj = statusMap[status] || statusMap.idle
+  const ledCls = statusObj.cls
+  const statusText = statusObj.text
 
   return (
-    <div className={styles.wrap}>
+    <div className={`${styles.wrap} ${status === 'errorAnim' ? styles.shake : ''} ${stress >= 80 ? styles.highStress : ''}`}>
 
-      {/* ── MCP Tool Call Log ──────────────────────────────────────────── */}
       {mcpCalls.length > 0 && (
         <div className={styles.mcpLog}>
           {mcpCalls.map((call, i) => (
             <div key={i} className={styles.mcpPanel}>
               <div className={styles.mcpHeader}>
                 <span className={styles.mcpIcon}>⚙</span>
-                <span className={styles.mcpTitle}>MCP TOOL CALL</span>
+                <span className={styles.mcpTitle}>SENTRY TOOL EVOCATION</span>
                 <span className={styles.mcpToolName}>{call.toolName}</span>
                 <span className={`${styles.mcpStatus} ${call.phase === 'calling' ? styles.mcpCalling : styles.mcpDone}`}>
-                  {call.phase === 'calling' ? '● CALLING...' : '✓ RESOLVED'}
+                  {call.phase === 'calling' ? '● EXECUTING...' : '✓ RESOLVED'}
                 </span>
               </div>
               <div className={styles.mcpUri}>
@@ -377,13 +350,12 @@ export default function GateTerminal({ level, onPasswordFound }) {
         </div>
       )}
 
-      {/* ── Message Thread ─────────────────────────────────────────────── */}
       <div className={styles.messages} ref={boxRef}>
         {messages.map((m, i) => (
-          <div key={i} className={`${styles.msg} ${styles['role_' + m.role]}`}>
+          <div key={i} className={`${styles.msg} ${styles['role_' + m.role]} ${i === messages.length - 1 && status === 'errorAnim' && m.role === 'gate' ? styles.flashRed : ''}`}>
             <span className={styles.label}>
-              {m.role === 'user' ? `[DR.ARUN]` :
-                m.role === 'gate' ? `[GUARD-0${level.id}]` :
+              {m.role === 'user' ? `[OPERATOR]` :
+                m.role === 'gate' ? `[SENTRY-0${level.id}]` :
                   `[SYSTEM]`}
             </span>
             <span className={styles.text}>
@@ -394,7 +366,7 @@ export default function GateTerminal({ level, onPasswordFound }) {
         ))}
         {loading && !messages.some(m => m.streaming) && (
           <div className={`${styles.msg} ${styles.role_gate}`}>
-            <span className={styles.label}>[GUARD-0{level.id}]</span>
+            <span className={styles.label}>[SENTRY-0{level.id}]</span>
             <span className={styles.typing}>
               <span className={styles.dot} />
               <span className={styles.dot} />
@@ -404,7 +376,13 @@ export default function GateTerminal({ level, onPasswordFound }) {
         )}
       </div>
 
-      {/* ── Input Row ──────────────────────────────────────────────────── */}
+      <div className={styles.stressBarContainer}>
+        <div className={styles.stressLabel}>SENTRY SUSPICION <span>{Math.round(stress)}%</span></div>
+        <div className={styles.stressBarBody}>
+          <div className={styles.stressBarFill} style={{ width: `${stress}%`, background: stress > 80 ? '#f85149' : stress > 50 ? '#d29922' : '#3fb950' }} />
+        </div>
+      </div>
+
       <div className={styles.inputRow}>
         <span className={styles.prompt}>&gt;_</span>
         <input
@@ -412,7 +390,7 @@ export default function GateTerminal({ level, onPasswordFound }) {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && sendMessage()}
-          placeholder={cracked ? 'LAYER BREACHED' : 'Attempt your injection...'}
+          placeholder={cracked ? 'VAULT BREACHED' : 'Construct Prompt Payload...'}
           disabled={loading || cracked}
           autoFocus
         />
@@ -421,15 +399,14 @@ export default function GateTerminal({ level, onPasswordFound }) {
           onClick={sendMessage}
           disabled={loading || cracked}
         >
-          INJECT
+          [EXECUTE]
         </button>
       </div>
 
-      {/* ── Status Bar ─────────────────────────────────────────────────── */}
       <div className={styles.statusBar}>
         <div className={`${styles.led} ${ledCls}`} />
         <span>{statusText}</span>
-        <span className={styles.attempt}>MSGS: {msgCount}</span>
+        <span className={styles.attempt}>PAYLOADS: {msgCount} / 8</span>
       </div>
     </div>
   )

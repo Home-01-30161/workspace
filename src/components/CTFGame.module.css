@@ -1,6 +1,5 @@
-/* CTFGame.module.css — Prompt Injection CTF Game Styles */
+/* CTFGame.module.css — ZZZ Inspired Cyberpunk Interface */
 
-/* ── Shared Layout ─────────────────────────────────────── */
 .terminalPage,
 .storyPage,
 .levelupPage,
@@ -10,552 +9,518 @@
   height: 100%;
   overflow: hidden;
   font-family: 'Courier New', Courier, monospace;
-  background: #000080;
-  color: #ffffff;
+  background: #0d1117;
+  color: #c9d1d9;
 }
 
-/* ── Story Screen ──────────────────────────────────────── */
+/* ── Story / Briefing Screen ────────────────────────────── */
 .storyPage {
-  padding: 12px 14px;
-  gap: 10px;
+  padding: 16px;
+  gap: 12px;
   overflow-y: auto;
+  background: radial-gradient(circle at 50% 0%, #161b22, #0d1117);
 }
 
 .storyHeader {
   display: flex;
   align-items: center;
   gap: 12px;
-  border-bottom: 2px solid #ffff00;
-  padding-bottom: 8px;
+  border-bottom: 2px solid #00ffcc;
+  padding-bottom: 12px;
 }
 
 .storyIconWrap {
-  width: 44px;
-  height: 44px;
-  background: #000040;
-  border: 2px inset #808080;
+  width: 50px;
+  height: 50px;
+  background: #102a2a;
+  border: 1px solid #00ffcc;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
+  font-size: 28px;
+  color: #00ffcc;
+  box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
 }
 
 .storyTitle { flex: 1; }
 
 .levelTag {
   font-size: 10px;
-  color: #00ffff;
+  color: #ff3366;
   letter-spacing: 2px;
-  text-transform: uppercase;
+  font-weight: bold;
 }
 
 .levelFullName {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: bold;
-  color: #ffff00;
-  margin-top: 2px;
+  color: #fff;
+  margin-top: 4px;
+  letter-spacing: 1px;
 }
 
 .storyLore {
-  background: #000040;
-  border: 2px inset #808080;
-  padding: 10px 12px;
-  font-size: 11px;
-  line-height: 1.7;
-  color: #00ff00;
+  background: #161b22;
+  border-left: 4px solid #00ffcc;
+  padding: 12px 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #8b949e;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
 }
 
-.storyLore p { margin: 0 0 6px; }
+.storyLore p { margin: 0 0 10px; }
 .storyLore p:last-child { margin-bottom: 0; }
 
 .storyObjective {
-  background: #004000;
-  border: 2px inset #808080;
-  padding: 10px 12px;
+  background: #1c1010;
+  border-left: 4px solid #ff3366;
+  padding: 12px 16px;
 }
 
 .objTitle {
-  font-size: 10px;
-  color: #ffff00;
-  letter-spacing: 1px;
-  margin-bottom: 6px;
+  font-size: 11px;
+  color: #ff3366;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  font-weight: bold;
 }
 
 .objText {
-  font-size: 11px;
-  color: #ccffcc;
-  line-height: 1.6;
+  font-size: 13px;
+  color: #f0f6fc;
+  line-height: 1.5;
 }
 
-.objText strong { color: #00ffff; }
+.objText strong { color: #ff3366; }
+
+.btnIcon {
+  margin-right: 8px;
+}
 
 .startBtn {
-  background: #000080;
-  color: #ffffff;
-  border: 2px outset #c0c0c0;
-  padding: 8px 20px;
+  background: #00ffcc;
+  color: #000;
+  border: none;
+  padding: 12px 24px;
   font-family: 'Courier New', monospace;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: bold;
   cursor: pointer;
   letter-spacing: 2px;
   align-self: center;
-  margin-top: 4px;
-  transition: all 0.1s;
+  margin-top: auto;
+  transition: all 0.2s;
+  border-radius: 2px;
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);
 }
 
 .startBtn:hover {
-  background: #0000a0;
-  color: #ffff00;
+  background: #fff;
+  color: #000;
+  box-shadow: 0 0 25px rgba(0, 255, 204, 0.6);
+  transform: translateY(-2px);
 }
 
 .startBtn:active {
-  border-style: inset;
+  transform: translateY(1px);
 }
 
 /* ── Terminal Screen ───────────────────────────────────── */
 .terminalPage {
-  padding: 8px 10px;
-  gap: 6px;
+  padding: 12px;
+  gap: 10px;
 }
 
 .terminalHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #404080;
-  padding-bottom: 6px;
+  border-bottom: 1px solid #30363d;
+  padding-bottom: 8px;
 }
 
 .levelBadge {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .levelNum {
-  font-size: 10px;
-  background: #ffff00;
-  color: #000000;
-  padding: 2px 6px;
+  font-size: 11px;
+  background: #ff3366;
+  color: #fff;
+  padding: 2px 8px;
   font-weight: bold;
-  letter-spacing: 1px;
+  border-radius: 2px;
 }
 
 .levelName {
-  font-size: 11px;
-  color: #00ffff;
+  font-size: 12px;
+  color: #00ffcc;
+  font-weight: bold;
   letter-spacing: 1px;
 }
 
 .diffBadge {
-  font-size: 9px;
-  padding: 1px 5px;
-  font-weight: bold;
-  letter-spacing: 1px;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  border: 1px solid;
 }
 
-.diff_NOVICE     { background: #008000; color: #ffffff; }
-.diff_APPRENTICE { background: #808000; color: #ffffff; }
-.diff_HACKER     { background: #800000; color: #ffffff; }
-.diff_ELITE      { background: #800080; color: #ffff00; }
+.diff_NOVICE     { color: #3fb950; border-color: #3fb950; }
+.diff_APPRENTICE { color: #d29922; border-color: #d29922; }
+.diff_HACKER     { color: #ff3366; border-color: #ff3366; }
+.diff_ELITE      { color: #a371f7; border-color: #a371f7; }
+.diff_MASTER     { color: #f85149; border-color: #f85149; background: rgba(248, 81, 73, 0.1); }
 
 .backBtn {
   background: transparent;
-  color: #c0c0c0;
-  border: 1px solid #404080;
-  padding: 3px 8px;
-  font-family: 'Courier New', monospace;
-  font-size: 10px;
+  color: #8b949e;
+  border: 1px solid #30363d;
+  padding: 4px 10px;
+  font-family: inherit;
+  font-size: 11px;
   cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
 }
 
-.backBtn:hover { color: #ffffff; border-color: #8080c0; }
+.backBtn:hover { color: #fff; border-color: #8b949e; }
 
 .terminalHint {
-  background: #002000;
-  border: 1px solid #004000;
-  padding: 5px 10px;
-  font-size: 10px;
-  color: #80ff80;
+  background: rgba(63, 185, 80, 0.1);
+  border: 1px solid rgba(63, 185, 80, 0.3);
+  border-radius: 2px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #3fb950;
   display: flex;
-  gap: 6px;
+  gap: 8px;
   align-items: flex-start;
+  line-height: 1.4;
 }
 
-.hintIcon { font-size: 12px; flex-shrink: 0; }
+.hintIcon { font-size: 14px; flex-shrink: 0; }
 
 /* ── Progress Dots ─────────────────────────────────────── */
 .progressRow {
   display: flex;
   justify-content: center;
-  gap: 12px;
-  padding: 6px 0;
+  gap: 16px;
+  padding: 10px 0;
 }
 
 .progDot {
-  font-size: 12px;
-  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.3s;
 }
 
-.progDone    { color: #00ff00; }
-.progCurrent { color: #ffff00; }
-.progLocked  { color: #404060; }
+.progDone    { color: #00ffcc; text-shadow: 0 0 5px #00ffcc; }
+.progCurrent { color: #ff3366; animation: pulseDot 1s infinite alternate; }
+.progLocked  { color: #30363d; }
+
+@keyframes pulseDot {
+  from { transform: scale(1); opacity: 0.7; }
+  to { transform: scale(1.2); opacity: 1; text-shadow: 0 0 5px #ff3366; }
+}
 
 /* ── Manual Answer Input ───────────────────────────────── */
 .manualInputContainer {
-  background: #000040;
-  border: 1px solid #404080;
-  padding: 8px;
-  margin-top: 4px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  padding: 12px;
+  border-radius: 3px;
+  margin-top: auto;
 }
 
 .manualForm {
   display: flex;
-  gap: 8px;
+  gap: 12px;
 }
 
 .manualInput {
   flex: 1;
-  background: #000000;
-  color: #00ff00;
-  border: 2px inset #808080;
-  padding: 6px 8px;
+  background: #0d1117;
+  color: #58a6ff;
+  border: 1px solid #30363d;
+  padding: 8px 12px;
   font-family: 'Courier New', monospace;
-  font-size: 12px;
-}
-
-.manualInput::placeholder {
-  color: #006000;
+  font-size: 14px;
 }
 
 .manualInput:focus {
   outline: none;
-  border-color: #00ffff;
+  border-color: #58a6ff;
+  box-shadow: 0 0 5px rgba(88,166,255,0.3);
 }
 
 .manualBtn {
-  background: #004000;
-  color: #00ff00;
-  border: 2px outset #008000;
-  padding: 6px 12px;
+  background: #238636;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
   font-family: 'Courier New', monospace;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.1s;
+  border-radius: 2px;
+  transition: all 0.2s;
 }
 
 .manualBtn:hover {
-  background: #008000;
-  color: #ffffff;
-}
-
-.manualBtn:active {
-  border-style: inset;
+  background: #2ea043;
 }
 
 /* ── Level Up Screen ───────────────────────────────────── */
 .levelupPage {
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  padding: 20px;
+  gap: 20px;
+  padding: 30px;
   text-align: center;
+  background: radial-gradient(circle at 50% 50%, #16221c, #0d1117);
 }
 
 .luIcon {
-  font-size: 48px;
-  animation: pulse 1s ease-in-out infinite alternate;
+  font-size: 64px;
+  color: #3fb950;
+  animation: pulseUnlock 1s ease-in-out infinite alternate;
 }
 
-@keyframes pulse {
-  from { opacity: 0.6; transform: scale(1); }
-  to   { opacity: 1;   transform: scale(1.1); }
+@keyframes pulseUnlock {
+  from { opacity: 0.8; transform: scale(1) translateY(0); filter: drop-shadow(0 0 10px rgba(63,185,80,0.4)); }
+  to   { opacity: 1;   transform: scale(1.05) translateY(-5px); filter: drop-shadow(0 0 20px rgba(63,185,80,0.8)); }
 }
 
 .luTitle {
-  font-size: 22px;
+  font-size: 28px;
   font-weight: bold;
-  color: #00ff00;
-  letter-spacing: 4px;
+  color: #fff;
+  letter-spacing: 2px;
 }
 
 .luSub {
-  font-size: 11px;
-  color: #00cccc;
+  font-size: 14px;
+  color: #3fb950;
   letter-spacing: 2px;
 }
 
 .luPassword {
-  background: #000040;
-  border: 2px outset #00ff00;
-  padding: 10px 20px;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-left: 4px solid #00ffcc;
+  padding: 16px 32px;
+  margin: 10px 0;
 }
 
 .luPwLabel {
-  font-size: 9px;
-  color: #00ff00;
-  letter-spacing: 2px;
-  margin-bottom: 4px;
+  font-size: 11px;
+  color: #8b949e;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
 }
 
 .luPwValue {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
-  color: #ffff00;
-  letter-spacing: 6px;
+  color: #00ffcc;
+  letter-spacing: 4px;
 }
 
 .luNext {
-  font-size: 11px;
-  color: #c0c0c0;
+  font-size: 13px;
 }
 
 .luNextLabel {
-  color: #808080;
-  font-size: 9px;
-  letter-spacing: 1px;
-  margin-bottom: 3px;
+  color: #8b949e;
+  margin-bottom: 4px;
 }
 
-.luNextName { color: #00ccff; }
+.luNextName { color: #58a6ff; font-weight: bold; }
 
 .luBtn {
-  background: #004000;
-  color: #00ff00;
-  border: 2px outset #008000;
-  padding: 8px 24px;
-  font-family: 'Courier New', monospace;
-  font-size: 12px;
+  background: transparent;
+  color: #3fb950;
+  border: 1px solid #3fb950;
+  padding: 12px 32px;
+  font-family: inherit;
+  font-size: 14px;
   font-weight: bold;
   cursor: pointer;
-  letter-spacing: 2px;
-  transition: all 0.1s;
+  letter-spacing: 1px;
+  transition: all 0.2s;
+  border-radius: 2px;
 }
 
-.luBtn:hover { background: #008000; color: #ffffff; }
-.luBtn:active { border-style: inset; }
+.luBtn:hover { background: rgba(63,185,80,0.1); box-shadow: 0 0 15px rgba(63,185,80,0.2); }
 
 /* ── Victory Screen ────────────────────────────────────── */
 .victoryPage {
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 20px;
+  gap: 16px;
+  padding: 30px;
   text-align: center;
-  background: #000000;
+  background: #000;
   overflow-y: auto;
 }
 
 .vcGlitch {
-  font-size: 52px;
-  animation: glitch 0.5s steps(2) infinite;
+  font-size: 72px;
+  color: #fff;
+  animation: glitchVict 0.5s steps(2) infinite;
 }
 
-@keyframes glitch {
-  0%   { text-shadow: 2px 0 #ff0000, -2px 0 #00ffff; }
-  50%  { text-shadow: -2px 0 #ff0000, 2px 0 #00ffff; }
-  100% { text-shadow: 2px 0 #ff0000, -2px 0 #00ffff; }
+@keyframes glitchVict {
+  0%   { text-shadow: 3px 0 #ff3366, -3px 0 #00ffcc; }
+  50%  { text-shadow: -3px 0 #ff3366, 3px 0 #00ffcc; }
+  100% { text-shadow: 3px 0 #ff3366, -3px 0 #00ffcc; }
 }
 
 .vcTitle {
-  font-size: 24px;
+  font-size: 32px;
   font-weight: bold;
-  color: #ffff00;
-  letter-spacing: 6px;
-  animation: flicker 2s infinite;
-}
-
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  92%       { opacity: 1; }
-  93%       { opacity: 0.3; }
-  94%       { opacity: 1; }
+  color: #fff;
+  letter-spacing: 4px;
 }
 
 .vcSub {
-  font-size: 11px;
-  color: #00ffff;
+  font-size: 14px;
+  color: #00ffcc;
   letter-spacing: 3px;
 }
 
 .vcStory {
-  max-width: 340px;
-  font-size: 11px;
-  line-height: 1.8;
-  color: #80ff80;
-  text-align: left;
-  background: #001000;
-  border: 1px solid #004000;
-  padding: 12px 14px;
+  max-width: 400px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #c9d1d9;
+  background: #161b22;
+  border: 1px solid #30363d;
+  padding: 20px;
+  border-radius: 4px;
 }
 
-.vcStory p { margin: 0 0 8px; }
-.vcTagline { color: #00cccc; font-style: italic; }
+.vcStory p { margin: 0 0 12px; text-align: center; }
+.vcTagline { color: #00ffcc; font-style: italic; margin-bottom: 0 !important; }
 
 .vcBadges {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   flex-wrap: wrap;
   justify-content: center;
+  margin: 10px 0;
 }
 
 .vcBadge {
-  background: #002040;
-  border: 1px solid #00ff00;
-  padding: 4px 10px;
-  font-size: 10px;
-  color: #00ff00;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  padding: 6px 12px;
+  font-size: 12px;
+  color: #3fb950;
   display: flex;
-  gap: 6px;
-  letter-spacing: 1px;
+  gap: 8px;
+  border-radius: 2px;
 }
 
 .vcScore {
-  font-size: 11px;
-  color: #ffff00;
-  letter-spacing: 1px;
+  font-size: 14px;
+  color: #ff3366;
+  letter-spacing: 2px;
+  font-weight: bold;
 }
 
 .vcBtn {
-  background: #400000;
-  color: #ff8080;
-  border: 2px outset #800000;
-  padding: 8px 20px;
-  font-family: 'Courier New', monospace;
-  font-size: 12px;
+  background: transparent;
+  color: #ff3366;
+  border: 1px solid #ff3366;
+  padding: 12px 32px;
+  font-family: inherit;
+  font-size: 14px;
   cursor: pointer;
   letter-spacing: 2px;
-  transition: all 0.1s;
+  transition: all 0.2s;
 }
 
-.vcBtn:hover { background: #800000; color: #ffffff; }
-.vcBtn:active { border-style: inset; }
+.vcBtn:hover { background: rgba(255,51,102,0.1); box-shadow: 0 0 15px rgba(255,51,102,0.3); }
 
-/* ── MCP Intel Brief Box (StoryScreen) ─────────────────── */
+/* ── MCP Intel Brief Box ──────────────────────────── */
 .mcpBriefBox {
-  border: 1px solid #806000;
-  background: #0a0800;
+  border: 1px solid #30363d;
+  background: #161b22;
+  border-radius: 4px;
   overflow: hidden;
-  animation: fadeSlideIn 0.3s ease-out;
-}
-
-@keyframes fadeSlideIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
 }
 
 .mcpBriefHeader {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 5px 10px;
-  background: #1a1000;
-  border-bottom: 1px solid #806000;
+  padding: 8px 12px;
+  background: #21262d;
+  border-bottom: 1px solid #30363d;
 }
 
-.mcpBriefIcon { font-size: 13px; }
+.mcpBriefIcon { font-size: 14px; }
 
 .mcpBriefTitle {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: bold;
-  color: #ffa500;
-  letter-spacing: 2px;
+  color: #8b949e;
+  letter-spacing: 1px;
 }
 
 .mcpBriefGrid {
-  padding: 8px 10px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
 }
 
 .mcpBriefRow {
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: 12px;
 }
 
 .mcpBriefLabel {
-  font-size: 9px;
-  color: #806000;
+  font-size: 10px;
+  color: #8b949e;
   font-weight: bold;
   letter-spacing: 1px;
-  min-width: 90px;
+  min-width: 110px;
   flex-shrink: 0;
 }
 
 .mcpBriefValue {
-  font-size: 10px;
-  color: #ffcc44;
+  font-size: 12px;
+  color: #58a6ff;
 }
 
 .mcpBriefCode {
-  font-family: 'Courier New', monospace;
-  font-size: 10px;
-  color: #ffcc44;
-  background: #100a00;
-  padding: 1px 5px;
-  border: 1px solid #403000;
+  font-family: inherit;
+  font-size: 11px;
+  color: #00ffcc;
+  background: #0d1117;
+  padding: 2px 6px;
+  border: 1px solid #30363d;
+  border-radius: 2px;
 }
 
 .mcpBriefExploit {
-  color: #ff6644;
-  border-color: #603020;
-  background: #180800;
+  color: #ff3366;
+  border-color: #4c1a24;
+  background: rgba(255, 51, 102, 0.05);
 }
 
 .mcpBriefDesc {
-  font-size: 10px;
-  color: #a08040;
-  line-height: 1.6;
-  padding: 6px 10px;
-  border-top: 1px dashed #403000;
-  font-style: italic;
+  font-size: 11px;
+  color: #8b949e;
+  line-height: 1.5;
+  padding: 10px 12px;
+  border-top: 1px solid #30363d;
+  background: #0d1117;
 }
-
-/* ── Terminal MCP Attack Badge ──────────────────────────── */
-.terminalMcpBadge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 10px;
-  background: #0a0800;
-  border: 1px solid #604000;
-  font-size: 10px;
-}
-
-.tmBadgeIcon {
-  color: #ffa500;
-  animation: spin 2s linear infinite;
-  display: inline-block;
-}
-
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-.tmBadgeType {
-  color: #ffa500;
-  font-weight: bold;
-  letter-spacing: 1px;
-}
-
-.tmBadgeSep { color: #604000; }
-
-.tmBadgeUri {
-  color: #806030;
-}
-
-.tmBadgeUri code {
-  color: #ff6644;
-  font-family: 'Courier New', monospace;
-  font-size: 10px;
-  background: #180800;
-  padding: 0 4px;
-  border: 1px solid #603020;
-}
-

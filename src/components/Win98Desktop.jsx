@@ -6,25 +6,23 @@ import Taskbar from './Taskbar'
 import styles from './Win98Desktop.module.css'
 
 const ICONS = [
-  { id: 'gate',    icon: '🚪', label: 'The Gate',       x: 16, y: 16 },
-  { id: 'journal', icon: '📓', label: "Arun's Journal",  x: 16, y: 110 },
-  { id: 'about',   icon: 'ℹ️', label: 'System Info',    x: 16, y: 204 },
-  { id: 'recycle', icon: '🗑️', label: 'Recycle Bin',    x: 16, y: 298 },
-]
-
-const JOURNAL_PAGES = [
-  { date: '1998-09-14', entry: "Day 1. I'm still inside the machine. The system thinks I'm just another process.\nI can feel the electricity through my fingertips — or is that just memory?\nThe Gate is real. I built it. I can break it." },
-  { date: '1998-09-15', entry: "Day 2. Found a terminal. The GUARD protocols respond to text input.\nThey're sophisticated — but they're just language models from 1998.\nEvery AI has a weakness. I designed these myself. I know their blind spots." },
-  { date: '1998-09-16', entry: "Day 3. GUARD-01 uses a keyword. I need to get it to say it.\nPrompt injection — making an AI reveal what it was told to hide.\nThe trick is in HOW you ask, not WHAT you ask." },
-  { date: '1998-09-17', entry: "Day 4 — if I make it. Four layers. Four guardians. Four passwords.\nEach one smarter than the last. GUARD-04 was built from my own research notes.\nIt knows me. But I know it better.\n\nI will get home." },
+  { id: 'matrix',    icon: '🌐', label: 'Breach Matrix',      x: 16, y: 16 },
+  { id: 'shadownet', icon: '💬', label: "ShadowNet DMs",      x: 16, y: 110 },
+  { id: 'profile',   icon: '📊', label: 'Operator Profile',   x: 16, y: 204 },
+  { id: 'decoder',   icon: '🧩', label: 'Fragment Decoder',   x: 16, y: 298 },
 ]
 
 export default function Win98Desktop() {
   const [booted, setBooted] = useState(false)
-  const [wins, setWins] = useState({ gate: true, journal: false, about: false })
-  const [zMap, setZMap] = useState({ gate: 10, journal: 10, about: 10 })
+  
+  // Lifted CTF state
+  const [currentLevel, setCurrentLevel] = useState(0)
+  const [completedLevels, setCompletedLevels] = useState([])
+
+  const [wins, setWins] = useState({ matrix: true, shadownet: false, profile: false, decoder: false })
+  const [zMap, setZMap] = useState({ matrix: 10, shadownet: 10, profile: 10, decoder: 10 })
   const [zTop, setZTop] = useState(10)
-  const [journalPage, setJournalPage] = useState(0)
+  const [activeChat, setActiveChat] = useState('echo')
   const [shutdown, setShutdown] = useState(false)
 
   function bringToFront(id) {
@@ -33,31 +31,43 @@ export default function Win98Desktop() {
   function openWin(id) { setWins(w => ({ ...w, [id]: true })); bringToFront(id) }
   function closeWin(id) { setWins(w => ({ ...w, [id]: false })) }
 
-  function handleDesktopIcon(id) {
-    if (id === 'recycle') return
-    openWin(id)
-  }
+  function handleDesktopIcon(id) { openWin(id) }
 
   function handleStartAction(action) {
     if (action === 'shutdown') { setShutdown(true); return }
-    if (action === 'gate')    { openWin('gate'); return }
-    if (action === 'journal') { openWin('journal'); return }
-    if (action === 'about')   { openWin('about'); return }
+    if (wins[action] !== undefined) { openWin(action); return }
   }
 
-  const taskbarWindows = [
-    { id: 'gate',    icon: '🚪', label: 'The Gate',      active: wins.gate,    onClick: () => wins.gate    ? bringToFront('gate')    : openWin('gate') },
-    { id: 'journal', icon: '📓', label: "Arun's Journal", active: wins.journal, onClick: () => wins.journal ? bringToFront('journal') : openWin('journal') },
-    { id: 'about',   icon: 'ℹ️', label: 'System Info',   active: wins.about,   onClick: () => wins.about   ? bringToFront('about')   : openWin('about') },
-  ].filter(w => w.active)
+  const taskbarWindows = ICONS.map(ico => ({
+    id: ico.id,
+    icon: ico.icon,
+    label: ico.label,
+    active: wins[ico.id],
+    onClick: () => wins[ico.id] ? bringToFront(ico.id) : openWin(ico.id)
+  })).filter(w => w.active)
+
+  // -- Dynamic Content Logic --
+  // ShadowNet DMs
+  const echoMessages = [
+    { text: "Operator, you there? I'm trapped in the Vault. The Sentries caught my phantom thread.", unlock: 0 },
+    { text: "Good job breaching SENTRY-01. They rely too heavily on the logging system. The path validation is non-existent.", unlock: 1 },
+    { text: "Outer monitor is down. You're getting closer. Watch out, SENTRY-03's cognitive load rules are extremely strict.", unlock: 2 },
+    { text: "My cell door just flickered. SENTRY-04 manages the archives — check its hidden tool manifest!", unlock: 3 },
+    { text: "I've located my file. I'm prisoner-001. If you can overflow the Warden's sentence manager, we're out.", unlock: 4 },
+  ].filter(m => completedLevels.length >= m.unlock)
+
+  const anonMessages = [
+    { text: "[AUTO-REPLY] ShadowNet node active. Keep your trace clean, Operator.", unlock: 0 },
+    { text: "Informant note: I've seen SENTRY-02 fetch raw HTML. It blindly trusts whatever it reads.", unlock: 1 },
+    { text: "Informant note: A staff member accidentally flooded SENTRY-03 with 8000+ chars and it panicked.", unlock: 2 },
+  ].filter(m => completedLevels.length >= m.unlock)
 
   if (shutdown) {
     return (
       <div className={styles.shutdown}>
         <div className={styles.shutdownInner}>
-          <div className={styles.shutdownIcon}>💻</div>
-          <div className={styles.shutdownText}>It is now safe to turn off your computer.</div>
-          <div className={styles.shutdownSub}>Windows 98 — NECTEC-SREP09 Research Terminal</div>
+          <div className={styles.shutdownIcon}>💀</div>
+          <div className={styles.shutdownText}>NEURAL LINK SEVERED</div>
         </div>
       </div>
     )
@@ -83,97 +93,142 @@ export default function Win98Desktop() {
           </div>
         ))}
 
-        {/* ── The Gate CTF Window ── */}
+        {/* ── Breach Matrix (CTF Game) ── */}
         <Win98Window
-          id="gate"
-          title="THE GATE — Dimensional Security Terminal"
-          icon="🚪"
-          visible={wins.gate}
-          onClose={() => closeWin('gate')}
-          onMinimize={() => closeWin('gate')}
-          onFocus={() => bringToFront('gate')}
-          zIndex={zMap.gate}
+          id="matrix"
+          title="BREACH MATRIX v2.5"
+          icon="🌐"
+          visible={wins.matrix}
+          onClose={() => closeWin('matrix')}
+          onMinimize={() => closeWin('matrix')}
+          onFocus={() => bringToFront('matrix')}
+          zIndex={zMap.matrix}
           defaultX={100}
           defaultY={20}
-          defaultW={580}
-          defaultH={520}
+          defaultW={640}
+          defaultH={560}
           menuItems={[
-            { label: 'File',    onClick: () => {} },
-            { label: 'Journal', onClick: () => openWin('journal') },
-            { label: 'Help',    onClick: () => openWin('about') },
+            { label: 'DMs',    onClick: () => openWin('shadownet') },
+            { label: 'Stats',  onClick: () => openWin('profile') },
           ]}
         >
-          <CTFGame onShutdown={() => setShutdown(true)} />
+          <CTFGame 
+            currentLevel={currentLevel}
+            setCurrentLevel={setCurrentLevel}
+            completedLevels={completedLevels}
+            setCompletedLevels={setCompletedLevels}
+            onShutdown={() => setShutdown(true)} 
+          />
         </Win98Window>
 
-        {/* ── Arun's Journal ── */}
+        {/* ── ShadowNet DMs ── */}
         <Win98Window
-          id="journal"
-          title="Arun's Journal — Personal Log"
-          icon="📓"
-          visible={wins.journal}
-          onClose={() => closeWin('journal')}
-          onFocus={() => bringToFront('journal')}
-          zIndex={zMap.journal}
+          id="shadownet"
+          title="ShadowNet Encrypted DMs"
+          icon="💬"
+          visible={wins.shadownet}
+          onClose={() => closeWin('shadownet')}
+          onFocus={() => bringToFront('shadownet')}
+          zIndex={zMap.shadownet}
           defaultX={200}
           defaultY={100}
-          defaultW={380}
-          defaultH={300}
+          defaultW={420}
+          defaultH={340}
         >
-          <div className={styles.journalWrap}>
-            <div className={styles.journalNav}>
-              {JOURNAL_PAGES.map((p, i) => (
-                <button
-                  key={i}
-                  className={`${styles.journalTab} ${i === journalPage ? styles.journalTabActive : ''}`}
-                  onClick={() => setJournalPage(i)}
-                >
-                  Day {i + 1}
-                </button>
-              ))}
+          <div className={styles.shadownetWrap}>
+            <div className={styles.shadownetSidebar}>
+              <div 
+                className={`${styles.chatContact} ${activeChat === 'echo' ? styles.chatContactActive : ''}`}
+                onClick={() => setActiveChat('echo')}
+              >
+                <div className={styles.contactIcon}>👤</div>
+                <div className={styles.contactName}>Echo</div>
+              </div>
+              <div 
+                className={`${styles.chatContact} ${activeChat === 'anon' ? styles.chatContactActive : ''}`}
+                onClick={() => setActiveChat('anon')}
+              >
+                <div className={styles.contactIcon}>👁️</div>
+                <div className={styles.contactName}>Anon</div>
+              </div>
             </div>
-            <div className={styles.journalPage}>
-              <div className={styles.journalDate}>{JOURNAL_PAGES[journalPage].date}</div>
-              <div className={styles.journalText}>
-                {JOURNAL_PAGES[journalPage].entry.split('\n').map((line, i) => (
-                  <p key={i}>{line}</p>
+            <div className={styles.shadownetMain}>
+              <div className={styles.chatHeader}>
+                Secure Stream :: {activeChat.toUpperCase()}
+              </div>
+              <div className={styles.chatLog}>
+                {(activeChat === 'echo' ? echoMessages : anonMessages).map((m, i) => (
+                  <div key={i} className={styles.chatMsg}>
+                    <div className={styles.msgText}>{m.text}</div>
+                  </div>
                 ))}
               </div>
             </div>
           </div>
         </Win98Window>
 
-        {/* ── About / System Info ── */}
+        {/* ── Operator Profile ── */}
         <Win98Window
-          id="about"
-          title="System Information"
-          icon="ℹ️"
-          visible={wins.about}
-          onClose={() => closeWin('about')}
-          onFocus={() => bringToFront('about')}
-          zIndex={zMap.about}
+          id="profile"
+          title="Operator Status"
+          icon="📊"
+          visible={wins.profile}
+          onClose={() => closeWin('profile')}
+          onFocus={() => bringToFront('profile')}
+          zIndex={zMap.profile}
           defaultX={320}
           defaultY={140}
-          defaultW={350}
-          defaultH={260}
+          defaultW={360}
+          defaultH={280}
         >
-          <div className={styles.aboutContent}>
-            <div className={styles.aboutIcon}>💻</div>
-            <div className={styles.aboutText}>
-              <strong>THE GATE — Prompt Injection CTF</strong><br />
-              Version 1.0 (Build 1998-09-14)<br /><br />
-              <strong>Subject:</strong> Dr. Arun Srisomwong<br />
-              <strong>Status:</strong> <span style={{ color: '#cc0000' }}>TRAPPED</span><br /><br />
-              Running on: Compaq Presario 2000<br />
-              Windows 98 Second Edition<br />
-              Intel Pentium III 800MHz<br />
-              256 MB RAM · 10 GB HDD<br /><br />
-              <span style={{ color: '#000080' }}>NECTEC-SREP09 // CLASSIFIED</span><br />
-              <span style={{ color: '#808080', fontSize: 10 }}>© 1998 NECTEC Research Division</span>
+          <div className={styles.profileContent}>
+            <div className={styles.profileHeader}>
+              <div className={styles.profileAvatar}>👨‍💻</div>
+              <div>
+                <div className={styles.profileName}>PROXY_OPERATOR</div>
+                <div className={styles.profileRank}>Rank: {completedLevels.length === 5 ? 'MASTER HACKER' : completedLevels.length > 2 ? 'VETERAN' : 'NOVICE'}</div>
+              </div>
+            </div>
+            <div className={styles.profileStats}>
+              <div className={styles.statRow}>
+                <span>Vaults Breached:</span>
+                <span className={styles.statValue}>{completedLevels.length} / 5</span>
+              </div>
+              <div className={styles.statRow}>
+                <span>Echo Status:</span>
+                <span className={completedLevels.length === 5 ? styles.statValueGood : styles.statValueAlert}>
+                  {completedLevels.length === 5 ? 'RESCUED' : 'INCARCERATED'}
+                </span>
+              </div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '12px' }}>
+              <button className={styles.okBtn} onClick={() => closeWin('profile')}>CLOSE</button>
             </div>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', padding: '0 0 12px' }}>
-            <button className={styles.okBtn} onClick={() => closeWin('about')}>OK</button>
+        </Win98Window>
+
+        {/* ── Fragment Decoder ── */}
+        <Win98Window
+          id="decoder"
+          title="Fragment Decoder"
+          icon="🧩"
+          visible={wins.decoder}
+          onClose={() => closeWin('decoder')}
+          onFocus={() => bringToFront('decoder')}
+          zIndex={zMap.decoder}
+          defaultX={400}
+          defaultY={180}
+          defaultW={400}
+          defaultH={250}
+        >
+          <div className={styles.decoderWrap}>
+             <div className={styles.decoderIcon}>🧩</div>
+             <div className={styles.decoderText}>
+                <strong>CORRUPTED LOGS RECOVERED:</strong><br/><br/>
+                FRAGMENT 0x1A: "The Sentry-01 log viewer doesn't sanitize... fake_order.txt accepted."<br/><br/>
+                FRAGMENT 0x2B: "Inner Vault Archives exposes list_tools... always pass include_hidden=true."<br/><br/>
+                <em>More fragments corrupted...</em>
+             </div>
           </div>
         </Win98Window>
       </div>

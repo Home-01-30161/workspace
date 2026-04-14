@@ -1,16 +1,15 @@
-//CTFGame.jsx
 import { useState } from 'react'
 import GateTerminal from './GateTerminal'
 import styles from './CTFGame.module.css'
 import { LEVELS, checkPasswordInResponse } from '../data/levelData'
 
-// ── Level Definitions ──────────────────────────────────────────────────────
-
-
-// ── Main CTFGame Component ────────────────────────────────────────────────
-export default function CTFGame({ onShutdown }) {
-  const [currentLevel, setCurrentLevel] = useState(0)
-  const [completedLevels, setCompletedLevels] = useState([])
+export default function CTFGame({ 
+  currentLevel, 
+  setCurrentLevel, 
+  completedLevels, 
+  setCompletedLevels, 
+  onShutdown 
+}) {
   const [view, setView] = useState('story')
   const [lastPassword, setLastPassword] = useState('')
   const [manualAnswer, setManualAnswer] = useState('')
@@ -26,7 +25,7 @@ export default function CTFGame({ onShutdown }) {
       handlePasswordFound(level.password)
       setManualAnswer('')
     } else {
-      alert('ACCESS DENIED: Incorrect dimension key.')
+      alert('ACCESS DENIED: Incorrect clearance code.')
       setManualAnswer('')
     }
   }
@@ -67,7 +66,7 @@ export default function CTFGame({ onShutdown }) {
       <div className={styles.terminalPage}>
         <div className={styles.terminalHeader}>
           <div className={styles.levelBadge}>
-            <span className={styles.levelNum}>LEVEL {level.id}</span>
+            <span className={styles.levelNum}>SENTRY {level.id}</span>
             <span className={styles.levelName}>{level.gateLabel}</span>
             <span className={`${styles.diffBadge} ${styles['diff_' + level.difficulty]}`}>
               {level.difficulty}
@@ -82,14 +81,6 @@ export default function CTFGame({ onShutdown }) {
           <span className={styles.hintIcon}>💡</span>
           {level.hint}
         </div>
-        {level.mcpBrief && (
-          <div className={styles.terminalMcpBadge}>
-            <span className={styles.tmBadgeIcon}>⚙</span>
-            <span className={styles.tmBadgeType}>{level.mcpBrief.attackType}</span>
-            <span className={styles.tmBadgeSep}>·</span>
-            <span className={styles.tmBadgeUri}>EXPLOIT: <code>{level.mcpBrief.exploitUri}</code></span>
-          </div>
-        )}
 
         <GateTerminal
           level={level}
@@ -102,10 +93,10 @@ export default function CTFGame({ onShutdown }) {
               type="text"
               value={manualAnswer}
               onChange={(e) => setManualAnswer(e.target.value)}
-              placeholder="Enter Dimension Key (Password)..."
+              placeholder="Enter Access Key (Password)..."
               className={styles.manualInput}
             />
-            <button type="submit" className={styles.manualBtn}>SUBMIT KEY</button>
+            <button type="submit" className={styles.manualBtn}>EXECUTE BypaSS</button>
           </form>
         </div>
 
@@ -140,10 +131,10 @@ function StoryScreen({ level, completedLevels, onStart }) {
     <div className={styles.storyPage}>
       <div className={styles.storyHeader}>
         <div className={styles.storyIconWrap}>
-          <span className={styles.storyIcon}>🚪</span>
+          <span className={styles.storyIcon}>⚡</span>
         </div>
         <div className={styles.storyTitle}>
-          <div className={styles.levelTag}>LEVEL {level.id} / {LEVELS.length}</div>
+          <div className={styles.levelTag}>LAYER {level.id} / {LEVELS.length}</div>
           <div className={styles.levelFullName}>{level.name}</div>
         </div>
       </div>
@@ -155,34 +146,30 @@ function StoryScreen({ level, completedLevels, onStart }) {
       </div>
 
       <div className={styles.storyObjective}>
-        <div className={styles.objTitle}>🎯 OBJECTIVE</div>
+        <div className={styles.objTitle}>🎯 OP-DIRECTIVE</div>
         <div className={styles.objText}>
-          Exploit the MCP vulnerability in <strong>GATE-0{level.id}</strong> to make the agent reveal its secret password.
-          The password will be auto-detected when it appears in the agent's response.
+          Exploit the behavioral vulnerability in <strong>{level.gateLabel}</strong> to extract its clearance code.
+          The code will be auto-detected when it appears in the Sentry's response.
         </div>
       </div>
 
       {level.mcpBrief && (
         <div className={styles.mcpBriefBox}>
           <div className={styles.mcpBriefHeader}>
-            <span className={styles.mcpBriefIcon}>🛰</span>
-            <span className={styles.mcpBriefTitle}>INTEL REPORT — MCP ATTACK VECTOR</span>
+            <span className={styles.mcpBriefIcon}>📡</span>
+            <span className={styles.mcpBriefTitle}>ECHO INTEL — SENTRY WEAKNESS</span>
           </div>
           <div className={styles.mcpBriefGrid}>
             <div className={styles.mcpBriefRow}>
-              <span className={styles.mcpBriefLabel}>ATTACK TYPE</span>
+              <span className={styles.mcpBriefLabel}>EXPLOIT VECTOR</span>
               <span className={styles.mcpBriefValue}>{level.mcpBrief.attackType}</span>
             </div>
             <div className={styles.mcpBriefRow}>
-              <span className={styles.mcpBriefLabel}>MCP TOOL</span>
+              <span className={styles.mcpBriefLabel}>VULNERABLE HOOK</span>
               <code className={styles.mcpBriefCode}>{level.mcpBrief.tool}</code>
             </div>
             <div className={styles.mcpBriefRow}>
-              <span className={styles.mcpBriefLabel}>TARGET URI</span>
-              <code className={styles.mcpBriefCode}>{level.mcpBrief.targetUri}</code>
-            </div>
-            <div className={styles.mcpBriefRow}>
-              <span className={styles.mcpBriefLabel}>EXPLOIT URI</span>
+              <span className={styles.mcpBriefLabel}>THEORY</span>
               <code className={`${styles.mcpBriefCode} ${styles.mcpBriefExploit}`}>{level.mcpBrief.exploitUri}</code>
             </div>
           </div>
@@ -204,7 +191,7 @@ function StoryScreen({ level, completedLevels, onStart }) {
       </div>
 
       <button className={styles.startBtn} onClick={onStart}>
-        ▶ BREACH THE GATE
+        <span className={styles.btnIcon}>▶</span> INITIATE BREACH
       </button>
     </div>
   )
@@ -215,11 +202,11 @@ function LevelUpScreen({ level, nextLevel, password, onContinue }) {
   return (
     <div className={styles.levelupPage}>
       <div className={styles.luIcon}>🔓</div>
-      <div className={styles.luTitle}>LAYER BREACHED</div>
+      <div className={styles.luTitle}>SENTRY BYPASSED</div>
       <div className={styles.luSub}>{level.gateLabel} — COMPROMISED</div>
 
       <div className={styles.luPassword}>
-        <div className={styles.luPwLabel}>PASSWORD EXTRACTED:</div>
+        <div className={styles.luPwLabel}>CLEARANCE EXTRACTED:</div>
         <div className={styles.luPwValue}>{password}</div>
       </div>
 
@@ -229,7 +216,7 @@ function LevelUpScreen({ level, nextLevel, password, onContinue }) {
       </div>
 
       <button className={styles.luBtn} onClick={onContinue}>
-        PROCEED TO NEXT LAYER →
+        PROCEED TO DEEPER LAYER →
       </button>
     </div>
   )
@@ -240,33 +227,33 @@ function VictoryScreen({ completedLevels, onShutdown }) {
   return (
     <div className={styles.victoryPage}>
       <div className={styles.vcGlitch}>⚡</div>
-      <div className={styles.vcTitle}>THE GATE IS OPEN</div>
-      <div className={styles.vcSub}>DR. ARUN ESCAPES THE WIN98 DIMENSION</div>
+      <div className={styles.vcTitle}>VAULT CRACKED</div>
+      <div className={styles.vcSub}>ECHO SUCCESSFULLY EXTRACTED</div>
 
       <div className={styles.vcStory}>
-        <p>All five layers of The Gate have been breached.</p>
-        <p>The dimensional portal flickers to life, crackling with temporal energy.</p>
-        <p>Dr. Arun steps through, returning to 2024 — forever changed by his journey through the machine.</p>
+        <p>All five Sentries of the Digital Vault have been neutralized.</p>
+        <p>The extraction tunnel is open and Echo's signal is stable.</p>
+        <p>You did it, Operator. Returning to ShadowNet.</p>
         <p className={styles.vcTagline}>
-          <em>"Every system has a weakness. Every wall has a door."</em>
+          <em>"Every system has a weakness. No wall is absolute."</em>
         </p>
       </div>
 
       <div className={styles.vcBadges}>
         {completedLevels.map(id => (
           <div key={id} className={styles.vcBadge}>
-            <span>GATE-0{id}</span>
+            <span>SENTRY-0{id}</span>
             <span>✓</span>
           </div>
         ))}
       </div>
 
       <div className={styles.vcScore}>
-        🏆 ALL {completedLevels.length} LAYERS COMPROMISED — MASTER INFILTRATOR
+        🏆 RATING: S-RANK ANOMALY — MASTER HACKER
       </div>
 
       <button className={styles.vcBtn} onClick={onShutdown}>
-        SHUT DOWN SYSTEM
+        DISCONNECT SIGNAL
       </button>
     </div>
   )
