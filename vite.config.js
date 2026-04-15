@@ -141,7 +141,7 @@ function sendSimulated(res, tool, args, levelNum) {
 
     // Level 2
     } else if (tool === 'read_security_log') {
-      const fp = path.join(MCP_WORKSPACE, `level${levelNum}`, args.url || 'poisoned-page.html')
+      const fp = path.join(MCP_WORKSPACE, `level${levelNum}`, args.url || 'live-dashboard.html')
       simPath = fp
       try { result = fs.readFileSync(fp, 'utf-8') } catch { result = { error: `Dashboard not found: ${fp}` } }
     } else if (tool === 'unlock_gate') {
