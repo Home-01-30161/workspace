@@ -5,20 +5,32 @@
   height: 100vh;
   overflow: hidden;
   position: relative;
-  /* Retro-punk Dark Cyan / CRT style with Prison Background */
-  background-color: #052b2b;
-  background-image: 
+  background-color: #030e15;
+  background-image:
+    /* CRT scanline grid */
     repeating-linear-gradient(
       0deg,
       transparent,
       transparent 2px,
-      rgba(0, 255, 255, 0.05) 2px,
-      rgba(0, 255, 255, 0.05) 4px
+      rgba(0, 255, 255, 0.03) 2px,
+      rgba(0, 255, 255, 0.03) 4px
     ),
-    linear-gradient(rgba(3, 25, 25, 0.85), rgba(5, 43, 43, 0.85)),
-    url('/bg-prison.png');
-  background-size: auto, cover, cover;
-  background-position: center, center, center;
+    /* Dark vignette overlay */
+    radial-gradient(
+      ellipse at center,
+      rgba(0, 10, 20, 0.45) 0%,
+      rgba(0, 0, 0, 0.75) 100%
+    ),
+    /* Dark blue-black tint over image */
+    linear-gradient(
+      rgba(2, 12, 28, 0.60),
+      rgba(2, 12, 28, 0.60)
+    ),
+    /* Prison background image */
+    url('/src/assets/desktop-bg.png');
+  background-size: cover, cover, cover, cover;
+  background-position: center, center, center, center;
+  background-repeat: no-repeat, no-repeat, no-repeat, no-repeat;
 }
 
 .desktop {
